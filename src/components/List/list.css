@@ -1,0 +1,36 @@
+
+.list-table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 24px;
+    background: white;
+    max-width: 80%;
+    width: 800%;
+    border-collapse: collapse;
+    text-align: center;
+    border: 1px solid rgb(199, 204, 204);
+    margin: 50px auto;
+  }
+  
+  th {
+    font-weight: bold;
+    color: white;
+    border: 1px solid white;
+    text-transform: uppercase;
+    background: #00c3f0;
+    padding: 30px;
+  }
+  td {
+     color:rgb(141, 138, 138);
+     padding: 20px 12px; 
+     transition: .3s linear; 
+     border: 1px solid rgb(185, 185, 185); 
+     border-top: 1px solid #e8edff;
+     padding: 20px; 
+     text-transform: capitalize;
+     box-shadow: 0 0 1px #666;
+  }
+  tr:hover td {color: #6699ff;}
+  
+  tr:nth-child(2n) {background: #f2f2f5;}
+  
+  
