@@ -1,12 +1,12 @@
 import React, { useState, useContext } from "react";
-import { ContextSetShow, ContextShowData } from "../App/App";
+import { ContextSetShow, ContextAddData } from "../App/App";
 import "./header.css";
 
 export default function Header2() {
   const [value, setValue] = useState("");
   const [text, setText] = useState(""); 
   const setShow = useContext(ContextSetShow)
-  const showData = useContext(ContextShowData)
+  const addData = useContext(ContextAddData)
 
   const addText = (e) => {
     setValue(e.target.value);
@@ -23,7 +23,7 @@ export default function Header2() {
         setShow(false);
       }, 4000);
     } else {
-      showData(value, text);
+      addData(value, text);
       setValue("");
       setText("");
     }

@@ -4,13 +4,16 @@ import Filter from "../Filter/Filter";
 import "./App.css";
 import Modal from "../Modal/Modal";
 import React, { useState, createContext, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+
+import Api from "./../../api/apiReq";
 
 export const ContextArr = createContext([]);
 export const ContextDeleteText = createContext();
 export const ContextShow = createContext(false);
 export const ContextSetShow = createContext();
-export const ContextShowData = createContext();
+export const ContextAddData = createContext();
 export const ContextUpdatedTask = createContext();
 export const ContextFilterYourArray = createContext();
 
@@ -19,58 +22,36 @@ function App() {
   const [arr, setArr] = useState([]);
   const [textFilter, setTextFilter] = useState("");
   const [filterArr, setFilterArr] = useState([]);
+
+  const loadData = async () => {
+    const data = await Api.getAllData();
+    setArr(data);
+    setFilterArr(data);
+  };
   useEffect(() => {
-    // start app //
-    if (localStorage.getItem("listTodo") !== null) {
-      console.log("такой ключ есть");
-      const dataArr = JSON.parse(localStorage.getItem("listTodo"));
-      // console.log(dataArr);
-      setArr(dataArr);
-      setFilterArr(dataArr);
-    } else {
-      //   console.log("такого ключа нет");
-      localStorage.setItem("listTodo", JSON.stringify([]));
-      //   console.log("ключ создан");
-    }
+    loadData();
   }, []);
 
-  // console.log(storedArr);
-
-  const deleteText = (id) => {
-    let filteredArr = arr.filter((el) => el.id !== id);
-    setArr(filteredArr);
-    localStorage.setItem("listTodo", JSON.stringify(filteredArr));
-    setFilterArr(filterSearch(textFilter, filteredArr));
+  const deleteText = async (id) => {
+    await Api.deleteId(id);
+    loadData();
   };
 
-  const updatedTask = (id, newText) => {
-    console.log(id, newText);
-    const idx = arr.findIndex((el) => el.id === id);
-
-    let obj = arr[idx];
+  const updatedTask = async (id, newText) => {
     const updObj = {
-      title: obj.title,
       body: newText,
-      id: obj.id,
     };
-    const newArray = [...arr.slice(0, idx), updObj, ...arr.slice(idx + 1)];
-    localStorage.setItem("listTodo", JSON.stringify(newArray));
-    setArr(newArray);
-    console.log(newArray);
-    setFilterArr(filterSearch(textFilter, newArray));
-    // console.log(filterSearch(textFilter));
+    await Api.updateId(id, updObj);
+    loadData();
   };
 
-  const showData = (v, t) => {
+  const addData = async (v, t) => {
     let newObj = {
-      id: uuidv4(),
       title: t,
       body: v,
     };
-    let objAdd = [newObj, ...arr];
-    setArr(objAdd);
-    localStorage.setItem("listTodo", JSON.stringify(objAdd));
-    setFilterArr(filterSearch(textFilter, objAdd));
+    await Api.postData(newObj);
+    loadData();
   };
 
   const filterSearch = (text, arrState = arr) => {
@@ -86,13 +67,33 @@ function App() {
     setTextFilter(text);
     setFilterArr(filterSearch(text));
   };
+  // ++++
 
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state);
   return (
     <div className="App">
+      <p>{reduxState.counter}</p>
+      <button
+        onClick={() => {
+          dispatch({ type: "ADD" });
+        }}
+      >
+        +
+      </button>
+      <button
+        onClick={() => {
+          dispatch({ type: "MINUS" });
+        }}
+      >
+        -
+      </button>
+      {/* // ++++ */}
+
       <ContextArr.Provider value={filterArr}>
         <ContextShow.Provider value={show}>
           <ContextSetShow.Provider value={setShow}>
-            <ContextShowData.Provider value={showData}>
+            <ContextAddData.Provider value={addData}>
               <ContextDeleteText.Provider value={deleteText}>
                 <ContextUpdatedTask.Provider value={updatedTask}>
                   <ContextFilterYourArray.Provider value={filterYourArray}>
@@ -103,7 +104,7 @@ function App() {
                   </ContextFilterYourArray.Provider>
                 </ContextUpdatedTask.Provider>
               </ContextDeleteText.Provider>
-            </ContextShowData.Provider>
+            </ContextAddData.Provider>
           </ContextSetShow.Provider>
         </ContextShow.Provider>
       </ContextArr.Provider>

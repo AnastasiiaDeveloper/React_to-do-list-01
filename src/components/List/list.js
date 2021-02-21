@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "./list.css";
 import ListIt from "./List-Item/ListItem";
-import { ContextArr, ContextDeleteText, ContextUpdatedTask} from "../App/App";
+import { ContextArr, ContextDeleteText, ContextUpdatedTask } from "../App/App";
 
 export default function List() {
   const arr = useContext(ContextArr);

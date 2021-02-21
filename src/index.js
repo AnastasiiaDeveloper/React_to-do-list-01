@@ -1,15 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './components/App/App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./components/App/App";
 
-ReactDOM.render(
-  <React.StrictMode>
+// ++++
+import { createStore } from "redux";
+// ++++
+
+// ++++
+import { Provider } from "react-redux";
+// ++++
+
+import reportWebVitals from "./reportWebVitals";
+
+// ++++
+import rootReducer from "./redux/rootReducer";
+
+const store = createStore(rootReducer);
+
+const app = (
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </Provider>
 );
+// ++++
+
+ReactDOM.render(app, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
